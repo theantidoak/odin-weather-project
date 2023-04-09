@@ -1,5 +1,7 @@
 const weatherForm = (() => document.getElementById('weather-form'))();
 const box = (() => document.querySelector(".box"))();
+const weatherSection = document.querySelector(".weather-info");
+const altSection = document.querySelector(".alt-locations");
 window.addEventListener("load", addFormListener)
 
 function addFormListener() {
@@ -45,6 +47,25 @@ function renderWeather(weatherData) {
   console.log("Fahrenheit", ((weatherData.main.temp_max - 273.15) * 1.8) + 32);
 }
 
+function renderAltCountries(weatherData) {
+  console.log(weatherData);
+  for (let i = 1; i < weatherData.length; i++) {
+    const card = document.createElement('div');
+    const text = document.createElement('p');
+    const content = document.createTextNode(weatherData[i].name + ', ' + weatherData[i].country);
+    text.appendChild(content)
+    if (weatherData[i].state) {
+      const stateContent = document.createTextNode(` (${weatherData[i].state})`);
+      text.appendChild(stateContent);
+    }
+    card.appendChild(text);
+    card.lat = weatherData[i].lat;
+    card.lon = weatherData[i].lon;
+    card.addEventListener('click', handleFormSubmit)
+    altSection.appendChild(card)
+  }
+}
+
 async function callAltCountries(city) {
   const weatherKey = 'e9a6614f553731a73dd13cc17e5ff8d9';
   const geoCall = await fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=5&appid=${weatherKey}`);
@@ -53,35 +74,54 @@ async function callAltCountries(city) {
   return geoData;
 }
 
-async function callWeather(location) {
+async function callWeatherByCoords(altLocations, otherLocation=false) {
+  const lat = otherLocation ? altLocations : altLocations[0].lat;
+  const lon = otherLocation ? otherLocation : altLocations[0].lon;
+  console.log("lan", lat)
+  console.log("lon", lon)
+  const weatherKey = 'e9a6614f553731a73dd13cc17e5ff8d9';
+  const weatherCall = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${weatherKey}`);
+  const weatherData = await weatherCall.json();
+
+  renderAltCountries(altLocations);
+
+  return weatherData;
+}
+
+async function callWeather(location, e) {
   const weatherKey = 'e9a6614f553731a73dd13cc17e5ff8d9';
   const weatherCall = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${weatherKey}`);
   const weatherData = await weatherCall.json();
   const altLocations = await callAltCountries(weatherData.name);
   if (altLocations.length > 1) {
-    return callWeatherByCoords(altLocations)
+    return callWeatherByCoords(altLocations);
   }
 
   return weatherData;
 }
 
-async function callWeatherByCoords(altLocations) {
-  console.log(altLocations);
-  const lat = altLocations[0].lat;
-  const lon = altLocations[0].lon;
-  const weatherKey = 'e9a6614f553731a73dd13cc17e5ff8d9';
-  const weatherCall = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${weatherKey}`);
-  const weatherData = await weatherCall.json();
+function handleWeather(e) {
+  const inputValue = document.querySelector("input[type=search]").value;
+  let promise;
+  if (e && e.currentTarget.parentElement === altSection) {
+    const coords = e.currentTarget;
+    promise = new Promise((resolve) => {
+      return setTimeout(() => resolve(callWeatherByCoords(coords.lat, coords.lon), 500));
+    })
+  } else {
+    promise = new Promise((resolve) => {
+      return setTimeout(() => resolve(callWeather(inputValue, e), 500));
+    })
+  }
 
-  return weatherData;
+  return promise;
 }
 
-function handleFormSubmit() {
-  const inputValue = document.querySelector("input[type=search]").value;
+function handleFormSubmit(e) {
   
-  new Promise((resolve) => {
-    return setTimeout(() => resolve(callWeather(inputValue), 500));
-  })
+  const promise = handleWeather(e);
+
+  promise
   .then((weatherData) => {
     renderWeather(weatherData);
     handleGif(weatherData);

@@ -17,3 +17,8 @@
 .load-off {
   border-color: red;
 }
+
+.alt-locations {
+  height: 8rem;
+  overflow-y: auto;
+}
