@@ -1,0 +1,14 @@
+.box {
+  width: 5rem;
+  height: 5rem;
+  margin: 5rem 0 0 5rem;
+  border: 5px solid black;
+}
+
+.load-on {
+  border-color: green;
+}
+
+.load-off {
+  border-color: red;
+}
