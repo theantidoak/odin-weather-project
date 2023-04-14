@@ -9,17 +9,40 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="box">
-    <div></div>
+  <div class="container">
+
+    <h2 id="heading">Weather App</h2>
+
+    <form action="" id="weather-form">
+      <input type="search" placeholder="...Search">
+    </form>
+
+    <div class="responsive-box">
+      <section class="weather-info">
+        <button class="degrees"><span id="celc" class="metric">°C</span> / <span id="fahr">°F</span></button>
+        <div id="main-weather">
+          <p id="temp"></p>
+          <p id="description"></p>
+        </div>
+        <div id="additional-weather">
+          <p>Feels Like: <span id="feelsLike"></span></p>
+          <p>Humidity: <span id="humidity"></span></p>
+          <p>Wind: <span id="wind"></span></p>
+        </div>
+      </section>
+      
+      <section>
+        <div class="alt-locations">
+          <div></div>
+        </div>
+      </section>
+    </div>
+
+    <button class="gif-btn">Show Gif</button>
+    <div class="box">
+      <div></div>
+    </div>
+
   </div>
-  <form action="" id="weather-form">
-    <input type="search" placeholder="...Search city">
-  </form>
-  <section class="weather-info">
-    <p></p>
-    <p></p>
-    <p></p>
-  </section>
-  <section class="alt-locations"></section>
 </body>
 </html>
