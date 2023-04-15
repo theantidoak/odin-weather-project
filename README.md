@@ -11,8 +11,8 @@ This weather tool includes the following features:
 
 Desktop:
 
-[image](Screenshot%202023-04-15%20at%2013.07.58.png/Screenshot 2023-04-15 at 13.07.58.png)
+[image](/Screenshot%202023-04-15%20at%2013.07.58.png)
 
 Mobile:
 
-[image](Screenshot%202023-04-15%20at%2013.08.11.png/Screenshot 2023-04-15 at 13.08.11.png)
+[image](/Screenshot%202023-04-15%20at%2013.08.11.png)
