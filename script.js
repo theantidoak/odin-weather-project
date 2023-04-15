@@ -182,11 +182,9 @@ function createWeatherObject(args) {
 function addTextContent(...args) {
   const objects = createWeatherObject(args);
 
-  console.log(objects)
   for (let i = 0; i < objects.length; i++) {
     const element = document.querySelector(`#${objects[i].id}`);
     if (i === objects.length - 1) {
-      console.log(objects[i].id);
       element.src = `https://openweathermap.org/img/wn/${objects[i].val}.png`
     } else {
       element.textContent = objects[i].val;
@@ -219,8 +217,6 @@ function capFirstLetter(description) {
 
 function renderWeather(weatherData, notInput, value) {
   notInput ? updateSelectedCity(value) : null;
-
-  console.log(weatherData)
 
   const targetMetric = document.querySelector(".metric");
   const convert = targetMetric.id === "celc" ? convertToC : convertToF;
