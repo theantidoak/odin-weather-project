@@ -62,7 +62,7 @@ body {
   flex-wrap: wrap;
 }
 
-.degrees {
+.degrees, .speed {
   position: absolute;
   top: .25rem;
   left: 0;
@@ -73,7 +73,17 @@ body {
   color: #ffffff;
 }
 
+.speed {
+  right: 0;
+  left: initial;
+}
+
 .metric {
+  font-weight: bold;
+  color: #41b3a3;
+}
+
+.metric-speed {
   font-weight: bold;
   color: #41b3a3;
 }
@@ -117,6 +127,7 @@ body {
 #additional-weather {
   flex: 1;
   min-width: 8rem;
+  padding-top: 1rem;
 }
 
 #additional-weather > p {

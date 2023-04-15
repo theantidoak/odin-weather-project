@@ -4,6 +4,7 @@ const box = (() => document.querySelector(".box"))();
 const weatherSection = (() => document.querySelector(".weather-info"))();
 const altSection = (() => document.querySelector(".alt-locations"))();
 const degreesBtn = (() => document.querySelector(".degrees"))();
+const speedBtn = (() => document.querySelector(".speed"))();
 window.addEventListener("load", addEventHandlers)
 
 // Global
@@ -11,7 +12,8 @@ window.addEventListener("load", addEventHandlers)
 function addEventHandlers() {
   weatherForm.addEventListener("submit", submitForm);
   gifBtn.addEventListener("click", toggleGif);
-  degreesBtn.addEventListener("click", changeMetric);
+  degreesBtn.addEventListener("click", changeTempMetric);
+  speedBtn.addEventListener("click", changeSpeedMetric);
 }
 
 function loadScreenON() {
@@ -24,23 +26,35 @@ function loadScreenOFF() {
   weatherSection.classList.add("load-off");
 }
 
-function renderOtherMetric() {
+function renderOtherTemp() {
   const feelsLike = document.getElementById("feelsLike");
   const temp = document.getElementById("temp");
 
   if (temp.textContent === "") return;
 
-  const targetMetric = document.querySelector(".metric");
+  const targetTemp = document.querySelector(".metric");
   const feelsLikeTemp = feelsLike.textContent.replace(/\D/g, '');
   const tempTemp = temp.textContent.replace(/\D/g, '');
 
-  feelsLike.textContent = targetMetric.id === "fahr" ? 
+  feelsLike.textContent = targetTemp.id === "fahr" ? 
     Math.round((+feelsLikeTemp - 32) * (5 / 9)) + "°C" :
     Math.round((+feelsLikeTemp * (9 / 5)) + 32) + "°F";
 
-  temp.textContent = targetMetric.id === "fahr" ? 
+  temp.textContent = targetTemp.id === "fahr" ? 
     Math.round((+tempTemp - 32) * (5 / 9)) + "°C" :
     Math.round((+tempTemp * (9 / 5)) + 32) + "°F";
+
+}
+
+function renderOtherSpeed() {
+  const wind = document.getElementById("wind");
+  const targetSpeed = document.querySelector(".metric-speed");
+  if (wind.textContent === "") return;
+  const windSpeed = wind.textContent.replace(/\D/g, '');
+
+  wind.textContent = targetSpeed.id === "mph" ? 
+  Math.round(+windSpeed * 1.609) + " KM/H" :
+  Math.round(+windSpeed / 1.609) + " MPH";
 }
 
 function toggleDegrees(e) {
@@ -48,9 +62,20 @@ function toggleDegrees(e) {
   spans.forEach((span) => span.classList.toggle("metric"));
 }
 
-function changeMetric(e) {
-  renderOtherMetric();
+function toggleSpeed(e) {
+  const spans = e.currentTarget.querySelectorAll("span");
+  spans.forEach((span) => span.classList.toggle("metric-speed"));
+}
+
+function changeTempMetric(e) {
+  renderOtherTemp();
   toggleDegrees(e);
+}
+
+function changeSpeedMetric(e) {
+  renderOtherSpeed();
+  toggleSpeed(e);
+
 }
 
 // Gif
@@ -200,15 +225,19 @@ function clearAll() {
 }
 
 function convertToC(value) {
-  return Math.floor(value - 273.15) + "°C";
+  return Math.round(value - 273.15) + "°C";
 }
 
 function convertToF(value) {
-  return Math.floor(((value - 273.15) * 1.8) + 32) + "°F";
+  return Math.round(((value - 273.15) * 1.8) + 32) + "°F";
 }
 
 function convertToMPH(value) {
-  return Math.floor(value * 2.237) + " MPH"
+  return Math.round(value * 2.237) + " MPH";
+}
+
+function convertToKMH(value) {
+  return Math.round(value * 3.6) + " KMH";
 }
 
 function capFirstLetter(description) {
@@ -218,12 +247,14 @@ function capFirstLetter(description) {
 function renderWeather(weatherData, notInput, value) {
   notInput ? updateSelectedCity(value) : null;
 
-  const targetMetric = document.querySelector(".metric");
-  const convert = targetMetric.id === "celc" ? convertToC : convertToF;
-  const temp = convert(weatherData.main.temp);
-  const feelsLike = convert(weatherData.main.feels_like);
+  const targetTemp = document.querySelector(".metric");
+  const targetSpeed = document.querySelector(".metric-speed");
+  const convertTemp = targetTemp.id === "celc" ? convertToC : convertToF;
+  const convertSpeed = targetSpeed.id === "kmh" ? convertToKMH : convertToMPH;
+  const temp = convertTemp(weatherData.main.temp);
+  const feelsLike = convertTemp(weatherData.main.feels_like);
   const humidity = weatherData.main.humidity + "%";
-  const wind = convertToMPH(weatherData.wind.speed);
+  const wind = convertSpeed(weatherData.wind.speed);
   const description = capFirstLetter(weatherData.weather[0].description);
   const icon = weatherData.weather[0].icon;
 
