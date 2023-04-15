@@ -48,8 +48,8 @@ function renderOtherTemp() {
 
 function renderOtherSpeed() {
   const wind = document.getElementById("wind");
-  const targetSpeed = document.querySelector(".metric-speed");
   if (wind.textContent === "") return;
+  const targetSpeed = document.querySelector(".metric-speed");
   const windSpeed = wind.textContent.replace(/\D/g, '');
 
   wind.textContent = targetSpeed.id === "mph" ? 
