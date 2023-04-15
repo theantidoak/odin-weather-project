@@ -71,6 +71,7 @@ body {
   border: none;
   background-color: transparent;
   color: #ffffff;
+  cursor: pointer;
 }
 
 .speed {
@@ -227,6 +228,7 @@ body {
   border-radius: 5px;
   border-width: 1px;
   box-shadow: 0 5px 15px #00000026;
+  cursor: pointer;
 }
 
 .box {
