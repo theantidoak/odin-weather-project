@@ -11,8 +11,8 @@ This weather tool includes the following features:
 
 Desktop:
 
-[Desktop image](/Screenshot%202023-04-15%20at%2013.07.58.png =600x300)
+![Desktop image](/Screenshot%202023-04-15%20at%2013.07.58.png)
 
 Mobile:
 
-[Mobile image](/Screenshot%202023-04-15%20at%2013.08.11.png =400x600)
+![Mobile image](/Screenshot%202023-04-15%20at%2013.08.11.png)
