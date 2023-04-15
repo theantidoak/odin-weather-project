@@ -4,12 +4,18 @@
   width: 100vw;
   height: 100vh;
   background-color: #41b3a3;
+  background-image: url("maksym-kaharlytskyi-B9MjX094Vvw-unsplash.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-attachment: fixed;
 }
 
 body {
   width: 100%;
   height: 100%;
   margin: 0;
+  padding-top: 3rem;
 }
 
 .container {
@@ -20,9 +26,12 @@ body {
 #heading {
   margin: 0 auto;
   color: #ffffff;
-  padding: 3rem 0 2rem;
+  background-color: #e27d60;
+  padding: .25rem 1rem;
+  border-radius: 4px;
   width: fit-content;
   font-size: 2.5rem;
+  margin-bottom: 1rem;
 }
 
 .responsive-box {
@@ -40,23 +49,24 @@ body {
   position: relative;
   display: flex;
   justify-content: center;
-  gap: 2rem;
+  column-gap: 1.25rem;
   color: #000000;
   padding: clamp(.75rem, 3vw, 2rem);
   height: 100%;
-  width: clamp(16rem, 90%, 18rem); 
+  width: clamp(16rem, 90%, 20rem); 
   border-color: #41b3a3;
   border-radius: 5px;
   border-width: 1px;
   box-shadow: 0 5px 15px #00000026;
   background-color: #e27d60;
+  flex-wrap: wrap;
 }
 
 .degrees {
   position: absolute;
-  top: -1.5rem;
+  top: .25rem;
   left: 0;
-  font-size: 1.25rem;
+  font-size: 1rem;
   appearance: none;
   border: none;
   background-color: transparent;
@@ -64,7 +74,8 @@ body {
 }
 
 .metric {
-  color: #e27d60;
+  font-weight: bold;
+  color: #41b3a3;
 }
 
 .weather-info p {
@@ -88,9 +99,34 @@ body {
   font-size: clamp(3.5rem, 14vw, 4.5rem);
 }
 
+.descript-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #41b3a3;
+  border-radius: 5px;
+  padding: .25rem .5rem;
+  color: #ffffff;
+}
+
+#icon {
+  height: clamp(1.5rem, 6vw, 2rem);
+  width: auto;
+}
+
 #additional-weather {
   flex: 1;
-  min-width: 7.5rem;
+  min-width: 8rem;
+}
+
+#additional-weather > p {
+  padding: .25rem .25rem .25rem .5rem;
+  background-color: #41b3a3;
+  border-radius: 4px;
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  gap: .35rem;
 }
 
 #additional-weather span {
@@ -117,11 +153,11 @@ body {
 }
 
 .load-on {
-  border-color: green;
+  background-color: #41b3a3;
 }
 
 .load-off {
-  border-color: red;
+  background-color: #e27d60;
 }
 
 #results-heading {
@@ -167,9 +203,13 @@ body {
   transform: scale(1.025);
 }
 
+.gif-container {
+  width: 100%;
+}
+
 .gif-btn {
   width: fit-content;
-  margin: 1rem auto 1rem;
+  margin: 1rem auto .5rem;
   display: block;
   appearance: none;
   border: none;
@@ -183,11 +223,44 @@ body {
   height: 10rem;
   margin: 0 auto;
   display: none;
-  padding-bottom: 2rem;
 }
 
 #gif {
   width: 100%;
   height: 100%;
   background-color: #41b3a3;
+}
+
+.clear {
+  height: 12rem;
+
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  height: 3rem;
+  width: 100%;
+  background-color: #41b3a3;
+  display: flex;
+  flex-direction: column;
+  gap: .25rem;
+  align-items: center;
+  justify-content: center;
+}
+
+footer p {
+  width: 100%;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: .25rem;
+  flex-wrap: wrap;
+  color: #ffffff;
+  font-size: clamp(.8rem, 4vw, .9rem);
+}
+
+footer p a {
+  color: #ffffff;
 }

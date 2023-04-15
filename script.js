@@ -11,22 +11,25 @@ window.addEventListener("load", addEventHandlers)
 function addEventHandlers() {
   weatherForm.addEventListener("submit", submitForm);
   gifBtn.addEventListener("click", toggleGif);
-  degreesBtn.addEventListener("click", toggleDegrees);
+  degreesBtn.addEventListener("click", changeMetric);
 }
 
 function loadScreenON() {
-  box.classList.remove("load-off");
-  box.classList.add("load-on");
+  weatherSection.classList.remove("load-off");
+  weatherSection.classList.add("load-on");
 }
 
 function loadScreenOFF() {
-  box.classList.remove("load-on");
-  box.classList.add("load-off");
+  weatherSection.classList.remove("load-on");
+  weatherSection.classList.add("load-off");
 }
 
 function renderOtherMetric() {
   const feelsLike = document.getElementById("feelsLike");
   const temp = document.getElementById("temp");
+
+  if (temp.textContent === "") return;
+
   const targetMetric = document.querySelector(".metric");
   const feelsLikeTemp = feelsLike.textContent.replace(/\D/g, '');
   const tempTemp = temp.textContent.replace(/\D/g, '');
@@ -41,10 +44,13 @@ function renderOtherMetric() {
 }
 
 function toggleDegrees(e) {
-  renderOtherMetric();
-
   const spans = e.currentTarget.querySelectorAll("span");
   spans.forEach((span) => span.classList.toggle("metric"));
+}
+
+function changeMetric(e) {
+  renderOtherMetric();
+  toggleDegrees(e);
 }
 
 // Gif
@@ -168,16 +174,24 @@ function createWeatherObject(args) {
   const humidity = { id: 'humidity', val: args[2] };
   const wind = { id: 'wind', val: args[3] };
   const description = { id: 'description', val: args[4] };
+  const icon = { id: 'icon', val: args[5] };
 
-  return [temp, feelsLike, humidity, wind, description];
+  return [temp, feelsLike, humidity, wind, description, icon];
 }
 
 function addTextContent(...args) {
   const objects = createWeatherObject(args);
 
+  console.log(objects)
   for (let i = 0; i < objects.length; i++) {
     const element = document.querySelector(`#${objects[i].id}`);
-    element.textContent = objects[i].val;
+    if (i === objects.length - 1) {
+      console.log(objects[i].id);
+      element.src = `https://openweathermap.org/img/wn/${objects[i].val}.png`
+    } else {
+      element.textContent = objects[i].val;
+    }
+    
   }
 }
 
@@ -206,6 +220,8 @@ function capFirstLetter(description) {
 function renderWeather(weatherData, notInput, value) {
   notInput ? updateSelectedCity(value) : null;
 
+  console.log(weatherData)
+
   const targetMetric = document.querySelector(".metric");
   const convert = targetMetric.id === "celc" ? convertToC : convertToF;
   const temp = convert(weatherData.main.temp);
@@ -213,8 +229,9 @@ function renderWeather(weatherData, notInput, value) {
   const humidity = weatherData.main.humidity + "%";
   const wind = convertToMPH(weatherData.wind.speed);
   const description = capFirstLetter(weatherData.weather[0].description);
-  
-  addTextContent(temp, feelsLike, humidity, wind, description);
+  const icon = weatherData.weather[0].icon;
+
+  addTextContent(temp, feelsLike, humidity, wind, description, icon);
 }
 
 async function callWeather(...args) {
