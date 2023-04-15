@@ -149,7 +149,7 @@ function renderAltCountries(weatherData) {
 
 async function callAltCountries(city) {
   const weatherKey = 'e9a6614f553731a73dd13cc17e5ff8d9';
-  const geoCall = await fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=5&appid=${weatherKey}`);
+  const geoCall = await fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=5&appid=${weatherKey}`);
   const geoData = await geoCall.json();
 
   return geoData;
