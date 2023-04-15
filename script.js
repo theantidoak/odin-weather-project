@@ -210,7 +210,7 @@ function addTextContent(...args) {
   for (let i = 0; i < objects.length; i++) {
     const element = document.querySelector(`#${objects[i].id}`);
     if (i === objects.length - 1) {
-      element.src = `https://openweathermap.org/img/wn/${objects[i].val}.png`
+      element.src = objects[i].val === "" ? "https://openweathermap.org/themes/openweathermap/assets/img/logo_white_cropped.png" : `https://openweathermap.org/img/wn/${objects[i].val}.png`
     } else {
       element.textContent = objects[i].val;
     }
