@@ -204,7 +204,7 @@ class WeatherObject {
   }
 }
 
-function changeWeatherContent(args) {
+function changeWeatherContent(...args) {
   const object = new WeatherObject(args);
   const keys = Object.keys(object);
   const values = Object.values(object);
@@ -218,12 +218,6 @@ function changeWeatherContent(args) {
     }
     
   }
-}
-
-function clearAll() {
-  const emptyDiv = document.createElement("div");
-  altSection.firstElementChild.replaceWith(emptyDiv);
-  changeWeatherContent("", "", "", "", "", "");
 }
 
 function convertToC(value) {
@@ -265,6 +259,12 @@ function renderWeather(notInput, value) {
   notInput ? updateSelectedCity(value) : null;
   const cityWeather = convertWeather.call(this);
   changeWeatherContent.apply(null, cityWeather);
+}
+
+function clearAll() {
+  const emptyDiv = document.createElement("div");
+  altSection.firstElementChild.replaceWith(emptyDiv);
+  changeWeatherContent("", "", "", "", "", "");
 }
 
 async function callWeather(...args) {
