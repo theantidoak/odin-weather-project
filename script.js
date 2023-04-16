@@ -205,7 +205,6 @@ class WeatherObject {
 }
 
 function changeWeatherContent(args) {
-  console.log(args)
   const object = new WeatherObject(args);
   const keys = Object.keys(object);
   const values = Object.values(object);
