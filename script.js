@@ -110,12 +110,12 @@ const callGif = (tempDepiction) => {
   gifData.then((res) => renderGif(res.data.images.original.url));
 }
 
-function handleGif(weatherData) {
-  if (weatherData.weather[0].description.split(" ").length > 1) {
-    return callGif(weatherData.weather[0].main);
+function handleGif() {
+  if (this.weather[0].description.split(" ").length > 1) {
+    return callGif(this.weather[0].main);
   }
 
-  return callGif(weatherData.weather[0].description);
+  return callGif(this.weather[0].description);
 }
 
 // Cities with same names
@@ -151,18 +151,18 @@ function removeDuplicates(cardContainer) {
   }
 }
 
-function renderAltCountries(weatherData) {
+function renderAltCountries() {
   const cardContainer = document.createElement('div');
 
-  for (let i = 0; i < weatherData.length; i++) {
+  for (let i = 0; i < this.length; i++) {
     const card = document.createElement('div');
     const text = document.createElement('p');
-    const loc = `${weatherData[i].name}${weatherData[i].state ? ', ' + weatherData[i].state : ''} (${weatherData[i].country ? weatherData[i].country : weatherData[i].sys.country})`;
+    const loc = `${this[i].name}${this[i].state ? ', ' + this[i].state : ''} (${this[i].country ? this[i].country : this[i].sys.country})`;
     const content = document.createTextNode(loc); 
     text.appendChild(content)
     card.appendChild(text);
-    card.lat = i === 0 ? weatherData[i].coord.lat : weatherData[i].lat;
-    card.lon = i === 0 ? weatherData[i].coord.lon : weatherData[i].lon;
+    card.lat = i === 0 ? this[i].coord.lat : this[i].lat;
+    card.lon = i === 0 ? this[i].coord.lon : this[i].lon;
     card.addEventListener('click', handleFormSubmit);
     cardContainer.appendChild(card);
   }
@@ -180,39 +180,41 @@ async function callAltCountries(city) {
   return geoData;
 }
 
-async function handleAltCountries(weatherData, cityCall) {
+async function handleAltCountries(cityCall) {
   if (!cityCall) return;
-  const altLocations = await callAltCountries(weatherData.name);
+  const altLocations = await callAltCountries(this.name);
   const filteredLocations = deleteDuplicates(altLocations);
 
   if (filteredLocations.length > 1) {
-    filteredLocations.unshift(weatherData);
-    renderAltCountries(filteredLocations);
+    filteredLocations.unshift(this);
+    renderAltCountries.call(filteredLocations);
   }
 }
 
 // Weather
 
-function createWeatherObject(args) {
-  const temp = { id: 'temp', val: args[0] };
-  const feelsLike = { id: 'feelsLike', val: args[1] };
-  const humidity = { id: 'humidity', val: args[2] };
-  const wind = { id: 'wind', val: args[3] };
-  const description = { id: 'description', val: args[4] };
-  const icon = { id: 'icon', val: args[5] };
-
-  return [temp, feelsLike, humidity, wind, description, icon];
+class WeatherObject {
+  constructor(args) {
+    this.temp = args[0];
+    this.feelsLike = args[1];
+    this.humidity = args[2];
+    this.wind = args[3];
+    this.description = args[4];
+    this.icon = args[5];
+  }
 }
 
-function addTextContent(...args) {
-  const objects = createWeatherObject(args);
+function changeWeatherContent(...args) {
+  const object = new WeatherObject(args);
+  const keys = Object.keys(object);
+  const values = Object.values(object);
 
-  for (let i = 0; i < objects.length; i++) {
-    const element = document.querySelector(`#${objects[i].id}`);
-    if (i === objects.length - 1) {
-      element.src = objects[i].val === "" ? "https://openweathermap.org/themes/openweathermap/assets/img/logo_white_cropped.png" : `https://openweathermap.org/img/wn/${objects[i].val}.png`
+  for (let i = 0; i < keys.length; i++) {
+    const element = document.querySelector(`#${keys[i]}`);
+    if (i === keys.length - 1) {
+      element.src = values[i] === "" ? "https://openweathermap.org/themes/openweathermap/assets/img/logo_white_cropped.png" : `https://openweathermap.org/img/wn/${values[i]}.png`
     } else {
-      element.textContent = objects[i].val;
+      element.textContent = values[i];
     }
     
   }
@@ -221,7 +223,7 @@ function addTextContent(...args) {
 function clearAll() {
   const emptyDiv = document.createElement("div");
   altSection.firstElementChild.replaceWith(emptyDiv);
-  addTextContent("", "", "", "", "", "");
+  changeWeatherContent("", "", "", "", "", "");
 }
 
 function convertToC(value) {
@@ -244,21 +246,25 @@ function capFirstLetter(description) {
   return description.charAt(0).toUpperCase() + description.slice(1);
 }
 
-function renderWeather(weatherData, notInput, value) {
-  notInput ? updateSelectedCity(value) : null;
-
+function convertWeather() {
   const targetTemp = document.querySelector(".metric");
   const targetSpeed = document.querySelector(".metric-speed");
   const convertTemp = targetTemp.id === "celc" ? convertToC : convertToF;
   const convertSpeed = targetSpeed.id === "kmh" ? convertToKMH : convertToMPH;
-  const temp = convertTemp(weatherData.main.temp);
-  const feelsLike = convertTemp(weatherData.main.feels_like);
-  const humidity = weatherData.main.humidity + "%";
-  const wind = convertSpeed(weatherData.wind.speed);
-  const description = capFirstLetter(weatherData.weather[0].description);
-  const icon = weatherData.weather[0].icon;
+  const temp = convertTemp(this.main.temp);
+  const feelsLike = convertTemp(this.main.feels_like);
+  const humidity = this.main.humidity + "%";
+  const wind = convertSpeed(this.wind.speed);
+  const description = capFirstLetter(this.weather[0].description);
+  const icon = this.weather[0].icon;
 
-  addTextContent(temp, feelsLike, humidity, wind, description, icon);
+  return [temp, feelsLike, humidity, wind, description, icon];
+}
+
+function renderWeather(notInput, value) {
+  notInput ? updateSelectedCity(value) : null;
+  const cityWeather = convertWeather.call(this)
+  changeWeatherContent.apply(null, cityWeather);
 }
 
 async function callWeather(...args) {
@@ -274,7 +280,7 @@ async function callWeather(...args) {
     throw weatherData.message;
   }
 
-  handleAltCountries(weatherData, cityCall);
+  handleAltCountries.call(weatherData, cityCall);
 
   return weatherData;
 }
@@ -294,8 +300,8 @@ function handleFormSubmit(e) {
   
   promise
     .then((weatherData) => {
-      renderWeather(weatherData, notInput, value);
-      handleGif(weatherData);
+      renderWeather.call(weatherData, notInput, value);
+      handleGif.call(weatherData);
     })
     .catch((error) => console.error(error))
     .finally(() => {
