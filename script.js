@@ -204,7 +204,8 @@ class WeatherObject {
   }
 }
 
-function changeWeatherContent(...args) {
+function changeWeatherContent(args) {
+  console.log(args)
   const object = new WeatherObject(args);
   const keys = Object.keys(object);
   const values = Object.values(object);
@@ -263,7 +264,7 @@ function convertWeather() {
 
 function renderWeather(notInput, value) {
   notInput ? updateSelectedCity(value) : null;
-  const cityWeather = convertWeather.call(this)
+  const cityWeather = convertWeather.call(this);
   changeWeatherContent.apply(null, cityWeather);
 }
 
